@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/three": "0.134.0",
+    "cannon-es": "^0.18.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "glob": "^7.1.6",
