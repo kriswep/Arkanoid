@@ -13187,6 +13187,118 @@ const endShapeContactEvent = {
 
 /***/ }),
 
+/***/ "./Assets/Components/Ball.re.ts":
+/*!**************************************!*\
+  !*** ./Assets/Components/Ball.re.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Ball)
+/* harmony export */ });
+/* harmony import */ var Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Assets/rogue_packages/rogue-cannon/Components/CannonBody.re */ "./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_1__);
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var __decorateClass = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result)
+    __defProp(target, key, result);
+  return result;
+};
+
+
+class Ball extends rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor() {
+    super(...arguments);
+    this.speed = 50;
+  }
+  awake() {
+    this.bodyComponent = rogue_engine__WEBPACK_IMPORTED_MODULE_1__.getComponent(Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__["default"], this.object3d);
+    this.bodyComponent.body.velocity.set(0.3, 0.7, 0);
+  }
+  update() {
+    const velocity = this.bodyComponent.body.velocity;
+    if (velocity.length() !== this.speed) {
+      velocity.normalize();
+      velocity.scale(this.speed, velocity);
+    }
+  }
+}
+__name(Ball, "Ball");
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Prop("Number")
+], Ball.prototype, "speed", 2);
+rogue_engine__WEBPACK_IMPORTED_MODULE_1__.registerComponent(Ball);
+
+
+/***/ }),
+
+/***/ "./Assets/Components/Paddle.re.ts":
+/*!****************************************!*\
+  !*** ./Assets/Components/Paddle.re.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Paddle)
+/* harmony export */ });
+/* harmony import */ var Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Assets/rogue_packages/rogue-cannon/Components/CannonBody.re */ "./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_1__);
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var __decorateClass = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result)
+    __defProp(target, key, result);
+  return result;
+};
+
+
+class Paddle extends rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor() {
+    super(...arguments);
+    this.speed = 10;
+    this.xLimit = 25;
+  }
+  awake() {
+    this.bodyComponent = rogue_engine__WEBPACK_IMPORTED_MODULE_1__.getComponent(Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__["default"], this.object3d);
+    this.actualXLimit = this.xLimit - this.object3d.scale.x / 2;
+  }
+  update() {
+    const movementX = rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Input.mouse.movementX;
+    this.bodyComponent.body.position.x += movementX * this.speed * rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Runtime.deltaTime;
+    if (this.bodyComponent.body.position.x < -this.actualXLimit) {
+      this.bodyComponent.body.position.x = -this.actualXLimit;
+    } else if (this.bodyComponent.body.position.x > this.actualXLimit) {
+      this.bodyComponent.body.position.x = this.actualXLimit;
+    }
+  }
+}
+__name(Paddle, "Paddle");
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Prop("Number")
+], Paddle.prototype, "speed", 2);
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Prop("Number")
+], Paddle.prototype, "xLimit", 2);
+rogue_engine__WEBPACK_IMPORTED_MODULE_1__.registerComponent(Paddle);
+
+
+/***/ }),
+
 /***/ "./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts":
 /*!************************************************************************!*\
   !*** ./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts ***!
@@ -15087,6 +15199,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_three__;
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
+/******/ 	__webpack_require__("./Assets/Components/Ball.re.ts");
+/******/ 	__webpack_require__("./Assets/Components/Paddle.re.ts");
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__("./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts");
 /******/ 	__webpack_require__("./Assets/rogue_packages/rogue-cannon/Components/CannonConfig.re.ts");
