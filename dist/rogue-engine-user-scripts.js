@@ -13229,6 +13229,15 @@ class Ball extends rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Component {
       velocity.normalize();
       velocity.scale(this.speed, velocity);
     }
+    this.correctSlowAngles(velocity);
+  }
+  correctSlowAngles(velocity) {
+    if (velocity.y < 0 && velocity.y > -10) {
+      velocity.y -= 10;
+    }
+    if (velocity.y >= 0 && velocity.y < 10) {
+      velocity.y += 10;
+    }
   }
 }
 __name(Ball, "Ball");
