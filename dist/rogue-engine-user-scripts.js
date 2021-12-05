@@ -13341,6 +13341,9 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
     startGameButton.onclick = () => this.onStartGame();
     restartButton.onclick = () => this.onStartOver();
     retryButton.onclick = () => this.onStartOver();
+    startGameButton.ontouchstart = () => this.onStartGame();
+    restartButton.ontouchstart = () => this.onStartOver();
+    retryButton.ontouchstart = () => this.onStartOver();
     this.startGameUI.style.display = "block";
   }
   setLives(lives) {

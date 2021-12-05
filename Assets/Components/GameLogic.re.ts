@@ -57,6 +57,10 @@ export default class GameLogic extends RE.Component {
     restartButton.onclick = () => this.onStartOver();
     retryButton.onclick = () => this.onStartOver();
 
+    startGameButton.ontouchstart = () => this.onStartGame();
+    restartButton.ontouchstart = () => this.onStartOver();
+    retryButton.ontouchstart = () => this.onStartOver();
+
     this.startGameUI.style.display = "block";
   }
 
