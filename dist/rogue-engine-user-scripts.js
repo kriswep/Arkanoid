@@ -13315,30 +13315,39 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.uiContainer.innerHTML = gameUI;
     this.startGameUI = document.getElementById("start-game-ui");
     this.gameOverUI = document.getElementById("game-over-ui");
+    this.inGameUI = document.getElementById("in-game-ui");
+    this.livesLabel = document.getElementById("lives-label");
     const startGameButton = document.getElementById("start-game-button");
     const restartButton = document.getElementById("restart-button");
     startGameButton.onclick = () => this.onStartGame();
     restartButton.onclick = () => this.onStartOver();
     this.startGameUI.style.display = "block";
   }
+  setLives(lives) {
+    this.livesLabel.textContent = `Lives: ${lives}`;
+  }
   onHitPit() {
     this.currentLives -= 1;
     if (this.currentLives <= 0) {
       return this.endGame();
     }
+    this.setLives(this.currentLives);
     this.ballComponent.bodyComponent.body.position.x = 0;
     this.ballComponent.bodyComponent.body.position.y = -31;
   }
   onStartGame() {
     this.startGameUI.style.display = "none";
+    this.inGameUI.style.display = "block";
     this.startGame();
   }
   onStartOver() {
     this.gameOverUI.style.display = "none";
+    this.inGameUI.style.display = "block";
     this.startGame();
   }
   startGame() {
     this.currentLives = this.lives;
+    this.setLives(this.currentLives);
     this.ball = this.ballPrefab.instantiate();
     this.brickWall = this.brickWallPrefab.instantiate();
     this.paddle = this.paddlePrefab.instantiate();
@@ -13349,6 +13358,7 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
   endGame() {
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Input.mouse.unlock();
+    this.inGameUI.style.display = "none";
     this.gameOverUI.style.display = "block";
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.ball);
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.brickWall);

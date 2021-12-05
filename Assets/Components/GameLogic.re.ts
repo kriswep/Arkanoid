@@ -19,6 +19,8 @@ export default class GameLogic extends RE.Component {
 
   startGameUI: HTMLDivElement;
   gameOverUI: HTMLDivElement;
+  inGameUI: HTMLDivElement;
+  livesLabel: HTMLDivElement;
 
   start() {
     this.initUI();
@@ -35,6 +37,9 @@ export default class GameLogic extends RE.Component {
 
     this.startGameUI = document.getElementById("start-game-ui") as HTMLDivElement;
     this.gameOverUI = document.getElementById("game-over-ui") as HTMLDivElement;
+    this.inGameUI = document.getElementById("in-game-ui") as HTMLDivElement;
+    
+    this.livesLabel = document.getElementById("lives-label") as HTMLDivElement;
 
     const startGameButton = document.getElementById("start-game-button") as HTMLDivElement;
     const restartButton = document.getElementById("restart-button") as HTMLDivElement;
@@ -45,6 +50,10 @@ export default class GameLogic extends RE.Component {
     this.startGameUI.style.display = "block";
   }
 
+  setLives(lives: number){
+    this.livesLabel.textContent = `Lives: ${lives}`;
+  }
+
   onHitPit() {
     this.currentLives -= 1;
     
@@ -52,22 +61,27 @@ export default class GameLogic extends RE.Component {
       return this.endGame();
     }
 
+    this.setLives(this.currentLives);
+    
     this.ballComponent.bodyComponent.body.position.x = 0;
     this.ballComponent.bodyComponent.body.position.y = -31;
   }
 
   onStartGame() {
     this.startGameUI.style.display = "none";
+    this.inGameUI.style.display = "block";
     this.startGame();
   }
 
   onStartOver() {
     this.gameOverUI.style.display = "none";
+    this.inGameUI.style.display = "block";
     this.startGame();
   }
 
   startGame() {    
     this.currentLives = this.lives;
+    this.setLives(this.currentLives);
 
     this.ball = this.ballPrefab.instantiate();
     this.brickWall = this.brickWallPrefab.instantiate();
@@ -84,6 +98,7 @@ export default class GameLogic extends RE.Component {
   endGame() {
     RE.Input.mouse.unlock();
 
+    this.inGameUI.style.display = "none";
     this.gameOverUI.style.display = "block";
 
     RE.Runtime.scene.remove(this.ball);
