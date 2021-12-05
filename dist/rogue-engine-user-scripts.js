@@ -13257,15 +13257,25 @@ var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
 
-class Brick extends rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Component {
+const _Brick = class extends rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Component {
+  awake() {
+    _Brick.count += 1;
+  }
   start() {
     this.bodyComponent = rogue_engine__WEBPACK_IMPORTED_MODULE_1__.getComponent(Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__["default"], this.object3d);
     this.bodyComponent.onCollide(() => {
       this.object3d.parent?.remove(this.object3d);
+      _Brick.count -= 1;
+      _Brick.onDestroy();
     });
   }
-}
+};
+let Brick = _Brick;
 __name(Brick, "Brick");
+Brick.count = 0;
+Brick.onDestroy = /* @__PURE__ */ __name(() => {
+}, "onDestroy");
+
 rogue_engine__WEBPACK_IMPORTED_MODULE_1__.registerComponent(Brick);
 
 
@@ -13284,7 +13294,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
 /* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Ball_re__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Ball.re */ "./Assets/Components/Ball.re.ts");
-/* harmony import */ var _Pit_re__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pit.re */ "./Assets/Components/Pit.re.ts");
+/* harmony import */ var _Brick_re__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Brick.re */ "./Assets/Components/Brick.re.ts");
+/* harmony import */ var _Pit_re__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Pit.re */ "./Assets/Components/Pit.re.ts");
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
@@ -13300,6 +13311,7 @@ var __decorateClass = (decorators, target, key, kind) => {
 
 
 
+
 class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
@@ -13307,7 +13319,12 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
   start() {
     this.initUI();
-    _Pit_re__WEBPACK_IMPORTED_MODULE_2__["default"].onHit = () => this.onHitPit();
+    _Pit_re__WEBPACK_IMPORTED_MODULE_3__["default"].onHit = () => this.onHitPit();
+    _Brick_re__WEBPACK_IMPORTED_MODULE_2__["default"].onDestroy = () => {
+      if (_Brick_re__WEBPACK_IMPORTED_MODULE_2__["default"].count === 0 && this.currentLives > 0) {
+        this.winGame();
+      }
+    };
   }
   async initUI() {
     const htmlPath = rogue_engine__WEBPACK_IMPORTED_MODULE_0__.getStaticPath("ui.html");
@@ -13315,12 +13332,15 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.uiContainer.innerHTML = gameUI;
     this.startGameUI = document.getElementById("start-game-ui");
     this.gameOverUI = document.getElementById("game-over-ui");
+    this.winGameUI = document.getElementById("win-game-ui");
     this.inGameUI = document.getElementById("in-game-ui");
     this.livesLabel = document.getElementById("lives-label");
     const startGameButton = document.getElementById("start-game-button");
     const restartButton = document.getElementById("restart-button");
+    const retryButton = document.getElementById("retry-button");
     startGameButton.onclick = () => this.onStartGame();
     restartButton.onclick = () => this.onStartOver();
+    retryButton.onclick = () => this.onStartOver();
     this.startGameUI.style.display = "block";
   }
   setLives(lives) {
@@ -13342,6 +13362,7 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
   onStartOver() {
     this.gameOverUI.style.display = "none";
+    this.winGameUI.style.display = "none";
     this.inGameUI.style.display = "block";
     this.startGame();
   }
@@ -13360,6 +13381,14 @@ class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Input.mouse.unlock();
     this.inGameUI.style.display = "none";
     this.gameOverUI.style.display = "block";
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.ball);
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.brickWall);
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.paddle);
+  }
+  winGame() {
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Input.mouse.unlock();
+    this.inGameUI.style.display = "none";
+    this.winGameUI.style.display = "block";
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.ball);
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.brickWall);
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.paddle);

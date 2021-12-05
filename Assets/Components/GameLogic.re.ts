@@ -1,6 +1,7 @@
 import * as RE from 'rogue-engine';
 import * as THREE from 'three';
 import Ball from './Ball.re';
+import Brick from './Brick.re';
 import Pit from './Pit.re';
 
 export default class GameLogic extends RE.Component {
@@ -19,6 +20,7 @@ export default class GameLogic extends RE.Component {
 
   startGameUI: HTMLDivElement;
   gameOverUI: HTMLDivElement;
+  winGameUI: HTMLDivElement;
   inGameUI: HTMLDivElement;
   livesLabel: HTMLDivElement;
 
@@ -26,6 +28,11 @@ export default class GameLogic extends RE.Component {
     this.initUI();
 
     Pit.onHit = () => this.onHitPit();
+    Brick.onDestroy = () => {
+      if (Brick.count === 0 && this.currentLives > 0){
+        this.winGame();
+      }
+    }
   }
 
   async initUI() {
@@ -37,15 +44,18 @@ export default class GameLogic extends RE.Component {
 
     this.startGameUI = document.getElementById("start-game-ui") as HTMLDivElement;
     this.gameOverUI = document.getElementById("game-over-ui") as HTMLDivElement;
+    this.winGameUI = document.getElementById("win-game-ui") as HTMLDivElement;
     this.inGameUI = document.getElementById("in-game-ui") as HTMLDivElement;
     
     this.livesLabel = document.getElementById("lives-label") as HTMLDivElement;
 
     const startGameButton = document.getElementById("start-game-button") as HTMLDivElement;
     const restartButton = document.getElementById("restart-button") as HTMLDivElement;
+    const retryButton = document.getElementById("retry-button") as HTMLDivElement;
 
     startGameButton.onclick = () => this.onStartGame();
     restartButton.onclick = () => this.onStartOver();
+    retryButton.onclick = () => this.onStartOver();
 
     this.startGameUI.style.display = "block";
   }
@@ -75,6 +85,7 @@ export default class GameLogic extends RE.Component {
 
   onStartOver() {
     this.gameOverUI.style.display = "none";
+    this.winGameUI.style.display = "none";
     this.inGameUI.style.display = "block";
     this.startGame();
   }
@@ -105,6 +116,18 @@ export default class GameLogic extends RE.Component {
     RE.Runtime.scene.remove(this.brickWall);
     RE.Runtime.scene.remove(this.paddle);
   }
+
+  winGame() {
+    RE.Input.mouse.unlock();
+
+    this.inGameUI.style.display = "none";
+    this.winGameUI.style.display = "block";
+
+    RE.Runtime.scene.remove(this.ball);
+    RE.Runtime.scene.remove(this.brickWall);
+    RE.Runtime.scene.remove(this.paddle);
+  }
+
 }
 
 RE.registerComponent(GameLogic);
