@@ -13271,6 +13271,35 @@ rogue_engine__WEBPACK_IMPORTED_MODULE_1__.registerComponent(Brick);
 
 /***/ }),
 
+/***/ "./Assets/Components/GameLogic.re.ts":
+/*!*******************************************!*\
+  !*** ./Assets/Components/GameLogic.re.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ GameLogic)
+/* harmony export */ });
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_0__);
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
+  awake() {
+  }
+  start() {
+  }
+  update() {
+  }
+}
+__name(GameLogic, "GameLogic");
+rogue_engine__WEBPACK_IMPORTED_MODULE_0__.registerComponent(GameLogic);
+
+
+/***/ }),
+
 /***/ "./Assets/Components/Paddle.re.ts":
 /*!****************************************!*\
   !*** ./Assets/Components/Paddle.re.ts ***!
@@ -15232,6 +15261,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_three__;
 /******/ 	// Load entry module and return exports
 /******/ 	__webpack_require__("./Assets/Components/Ball.re.ts");
 /******/ 	__webpack_require__("./Assets/Components/Brick.re.ts");
+/******/ 	__webpack_require__("./Assets/Components/GameLogic.re.ts");
 /******/ 	__webpack_require__("./Assets/Components/Paddle.re.ts");
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__("./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts");
