@@ -1,19 +1,35 @@
-<div>
+<div id="arkanoid-ui">
   <div id="start-game-ui" class="menu">
     <div id="start-game-button" class="clickable">
       Start Game
     </div>
   </div>
 
+  <div class="menu" id="game-over-ui">
+    <div>Game Over</div>
+    <div class="clickable" id="restart-button">Try Again?</div>
+  </div>
+
 </div>
 
 <style>
+  #arkanoid-ui {
+    font-family: sans-serif;
+    font-size: 1.5rem;
+    color: white;
+    height: 100%;
+    margin: 0;
+  }
+
+  #arkanoid-ui > div {
+    display: none;
+  }
+
   .menu {
     position: absolute;
     top: 50%;
     width: 100%;
     text-align: center;
-    color: white;
   }
 
   .clickable {

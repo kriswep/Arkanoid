@@ -13283,6 +13283,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
 /* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Ball_re__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Ball.re */ "./Assets/Components/Ball.re.ts");
+/* harmony import */ var _Pit_re__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pit.re */ "./Assets/Components/Pit.re.ts");
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
@@ -13296,29 +13298,61 @@ var __decorateClass = (decorators, target, key, kind) => {
   return result;
 };
 
+
+
 class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.currentLives = 0;
+  }
   start() {
     this.initUI();
+    _Pit_re__WEBPACK_IMPORTED_MODULE_2__["default"].onHit = () => this.onHitPit();
   }
   async initUI() {
     const htmlPath = rogue_engine__WEBPACK_IMPORTED_MODULE_0__.getStaticPath("ui.html");
     const gameUI = await (await fetch(htmlPath)).text();
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.uiContainer.innerHTML = gameUI;
     this.startGameUI = document.getElementById("start-game-ui");
+    this.gameOverUI = document.getElementById("game-over-ui");
     const startGameButton = document.getElementById("start-game-button");
+    const restartButton = document.getElementById("restart-button");
     startGameButton.onclick = () => this.onStartGame();
+    restartButton.onclick = () => this.onStartOver();
+    this.startGameUI.style.display = "block";
+  }
+  onHitPit() {
+    this.currentLives -= 1;
+    if (this.currentLives <= 0) {
+      return this.endGame();
+    }
+    this.ballComponent.bodyComponent.body.position.x = 0;
+    this.ballComponent.bodyComponent.body.position.y = -31;
   }
   onStartGame() {
     this.startGameUI.style.display = "none";
     this.startGame();
   }
+  onStartOver() {
+    this.gameOverUI.style.display = "none";
+    this.startGame();
+  }
   startGame() {
+    this.currentLives = this.lives;
     this.ball = this.ballPrefab.instantiate();
     this.brickWall = this.brickWallPrefab.instantiate();
     this.paddle = this.paddlePrefab.instantiate();
+    this.ballComponent = rogue_engine__WEBPACK_IMPORTED_MODULE_0__.getComponent(_Ball_re__WEBPACK_IMPORTED_MODULE_1__["default"], this.ball);
     this.paddle.position.y = -32;
     this.ball.position.y = -31;
     rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Input.mouse.lock();
+  }
+  endGame() {
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Input.mouse.unlock();
+    this.gameOverUI.style.display = "block";
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.ball);
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.brickWall);
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.scene.remove(this.paddle);
   }
 }
 __name(GameLogic, "GameLogic");
@@ -13331,6 +13365,9 @@ __decorateClass([
 __decorateClass([
   rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Prop("Prefab")
 ], GameLogic.prototype, "paddlePrefab", 2);
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Prop("Number")
+], GameLogic.prototype, "lives", 2);
 rogue_engine__WEBPACK_IMPORTED_MODULE_0__.registerComponent(GameLogic);
 
 
@@ -13391,6 +13428,44 @@ __decorateClass([
   rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Prop("Number")
 ], Paddle.prototype, "xLimit", 2);
 rogue_engine__WEBPACK_IMPORTED_MODULE_1__.registerComponent(Paddle);
+
+
+/***/ }),
+
+/***/ "./Assets/Components/Pit.re.ts":
+/*!*************************************!*\
+  !*** ./Assets/Components/Pit.re.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Pit)
+/* harmony export */ });
+/* harmony import */ var Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Assets/rogue_packages/rogue-cannon/Components/CannonBody.re */ "./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
+/* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_1__);
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+
+const _Pit = class extends rogue_engine__WEBPACK_IMPORTED_MODULE_1__.Component {
+  start() {
+    this.bodyComponent = rogue_engine__WEBPACK_IMPORTED_MODULE_1__.getComponent(Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__["default"], this.object3d);
+    this.bodyComponent.onCollide((event) => {
+      const otherBody = Assets_rogue_packages_rogue_cannon_Components_CannonBody_re__WEBPACK_IMPORTED_MODULE_0__["default"].findByBody(event.other);
+      if (otherBody?.object3d.name === "Ball") {
+        _Pit.onHit();
+      }
+    });
+  }
+};
+let Pit = _Pit;
+__name(Pit, "Pit");
+Pit.onHit = /* @__PURE__ */ __name(() => {
+}, "onHit");
+
+rogue_engine__WEBPACK_IMPORTED_MODULE_1__.registerComponent(Pit);
 
 
 /***/ }),
@@ -15295,11 +15370,12 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_three__;
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__("./Assets/Components/Ball.re.ts");
 /******/ 	__webpack_require__("./Assets/Components/Brick.re.ts");
 /******/ 	__webpack_require__("./Assets/Components/GameLogic.re.ts");
 /******/ 	__webpack_require__("./Assets/Components/Paddle.re.ts");
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	__webpack_require__("./Assets/Components/Pit.re.ts");
 /******/ 	__webpack_require__("./Assets/rogue_packages/rogue-cannon/Components/CannonBody.re.ts");
 /******/ 	__webpack_require__("./Assets/rogue_packages/rogue-cannon/Components/CannonConfig.re.ts");
 /******/ 	__webpack_require__("./Assets/rogue_packages/rogue-cannon/Components/Constraints/CannonConstraint.ts");
