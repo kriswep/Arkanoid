@@ -13284,17 +13284,53 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rogue-engine */ "rogue-engine");
 /* harmony import */ var rogue_engine__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(rogue_engine__WEBPACK_IMPORTED_MODULE_0__);
 var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var __decorateClass = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result)
+    __defProp(target, key, result);
+  return result;
+};
 
 class GameLogic extends rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Component {
-  awake() {
-  }
   start() {
+    this.initUI();
   }
-  update() {
+  async initUI() {
+    const htmlPath = rogue_engine__WEBPACK_IMPORTED_MODULE_0__.getStaticPath("ui.html");
+    const gameUI = await (await fetch(htmlPath)).text();
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Runtime.uiContainer.innerHTML = gameUI;
+    this.startGameUI = document.getElementById("start-game-ui");
+    const startGameButton = document.getElementById("start-game-button");
+    startGameButton.onclick = () => this.onStartGame();
+  }
+  onStartGame() {
+    this.startGameUI.style.display = "none";
+    this.startGame();
+  }
+  startGame() {
+    this.ball = this.ballPrefab.instantiate();
+    this.brickWall = this.brickWallPrefab.instantiate();
+    this.paddle = this.paddlePrefab.instantiate();
+    this.paddle.position.y = -32;
+    this.ball.position.y = -31;
+    rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Input.mouse.lock();
   }
 }
 __name(GameLogic, "GameLogic");
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Prop("Prefab")
+], GameLogic.prototype, "ballPrefab", 2);
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Prop("Prefab")
+], GameLogic.prototype, "brickWallPrefab", 2);
+__decorateClass([
+  rogue_engine__WEBPACK_IMPORTED_MODULE_0__.Prop("Prefab")
+], GameLogic.prototype, "paddlePrefab", 2);
 rogue_engine__WEBPACK_IMPORTED_MODULE_0__.registerComponent(GameLogic);
 
 
