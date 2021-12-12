@@ -3,7 +3,7 @@ import * as RE from 'rogue-engine';
 
 export default class Paddle extends RE.Component {
   @RE.Prop("Number") speed = 10;
-  @RE.Prop("Number") xLimit = 25;
+  @RE.Prop("Number") xLimit = 24.5;
 
   bodyComponent: CannonBody;
 
