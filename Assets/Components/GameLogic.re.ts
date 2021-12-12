@@ -78,7 +78,7 @@ export default class GameLogic extends RE.Component {
     this.setLives(this.currentLives);
     
     this.ballComponent.bodyComponent.body.position.x = 0;
-    this.ballComponent.bodyComponent.body.position.y = -31;
+    this.ballComponent.bodyComponent.body.position.y = -30;
   }
 
   onStartGame() {
@@ -105,7 +105,7 @@ export default class GameLogic extends RE.Component {
     this.ballComponent = RE.getComponent(Ball, this.ball) as Ball;
 
     this.paddle.position.y = -32;
-    this.ball.position.y = -31;
+    this.ball.position.y = -30;
 
     RE.Input.mouse.lock();
   }
