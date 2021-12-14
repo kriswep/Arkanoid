@@ -15,7 +15,7 @@ export default class Paddle extends RE.Component {
   }
 
   update() {
-    const movementX =  RE.Input.mouse.movementX;
+    const movementX = RE.Input.touch.touches[0] ? RE.Input.touch.touches[0].deltaX * 1.5: RE.Input.mouse.movementX;
 
     this.bodyComponent.body.position.x += movementX * this.speed * RE.Runtime.deltaTime;
   
