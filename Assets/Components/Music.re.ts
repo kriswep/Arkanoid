@@ -16,9 +16,25 @@ export default class Music extends RE.Component {
     this.object3d.add(audio);
     
     const documentBody = document.getElementsByTagName("body") as HTMLCollectionOf<HTMLBodyElement>;
-    documentBody[0].onclick = () => this.startMusic();
+    const startGameButton = document.getElementById("start-game-button") as HTMLDivElement;
+
+    documentBody[0].addEventListener("click", this.startMusic);
+    documentBody[0].addEventListener("touchstart", this.startMusic);
+
+    // restart on start button, doesn't start on mobile when clicking on body
+    if(startGameButton){
+      startGameButton.addEventListener("click", this.restartMusic);
+      startGameButton.addEventListener("touchstart", this.restartMusic);
+    }
   }
   
+  restartMusic = () => {
+    if (this.backgroundMusic.isPlaying){
+      this.backgroundMusic.stop();
+    }
+    this.startMusic();
+  }
+
   startMusic = () => {
     if (!this.backgroundMusic.isPlaying){
       this.backgroundMusic.setVolume(this.soundVolume);
